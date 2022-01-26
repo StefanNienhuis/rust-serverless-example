@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "start": "serverless offline --stage dev",
+    "build": "serverless package",
+    "dev": "nodemon"
+  },
+  "devDependencies": {
+    "@stefannienhuis/serverless-offline": "^8.3.1",
+    "serverless": "^2.72.1"
+  }
+}

@@ -1,0 +1,8 @@
+{
+    "watch": [
+        "functions",
+        "serverless.yml"
+    ],
+    "ext": "rs",
+    "exec": "serverless offline --stage dev"
+}

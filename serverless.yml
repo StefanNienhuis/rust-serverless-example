@@ -1,0 +1,53 @@
+service: rust-serverless-example
+
+provider:
+  name: aws
+  region: eu-west-1
+  runtime: rust
+  architecture: arm64 # x86_64 or arm64
+  memorySize: 128
+  lambdaHashingVersion: '20201221'
+
+plugins:
+  - ../serverless-rust
+  - '@stefannienhuis/serverless-offline'
+
+package:
+  individually: true
+
+functions:
+  ping:
+    handler: ping # Rust package name
+    name: ${self:service}-${opt:stage}-ping
+
+    events:
+      - httpApi:
+          method: 'GET'
+          path: '/getping' # /ping is reserved
+
+  hello:
+    handler: hello # Rust package name
+    name: ${self:service}-${opt:stage}-hello
+
+    events:
+      - httpApi:
+          method: 'POST'
+          path: '/hello'
+
+custom:
+  stageOptions:
+    target:
+      dev: aarch64-apple-darwin # Local target
+      default: aarch64-unknown-linux-musl # Lambda target
+
+    linker:
+      dev: clang # Linker for local target
+      default: aarch64-unknown-linux-musl-gcc # Linker for Lambda target
+
+  serverless-offline:
+    useRIE: true
+
+  rust:
+    dockerless: true
+    target: ${self:custom.stageOptions.target.${opt:stage}, self:custom.stageOptions.target.default}
+    linker: ${self:custom.stageOptions.linker.${opt:stage}, self:custom.stageOptions.linker.default}
